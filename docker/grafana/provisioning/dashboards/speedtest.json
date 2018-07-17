@@ -594,7 +594,13 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "host",
+              "operator": "=",
+              "value": "local"
+            }
+          ]
         }
       ],
       "thresholds": [],
@@ -817,7 +823,7 @@
             },
             {
               "params": [
-                "null"
+                "none"
               ],
               "type": "fill"
             }
@@ -953,6 +959,7 @@
       "type": "table"
     }
   ],
+  "refresh": false,
   "schemaVersion": 16,
   "style": "dark",
   "tags": [],
@@ -991,5 +998,5 @@
   "timezone": "",
   "title": "Speedtest results",
   "uid": "0A6hxROiz",
-  "version": 1
+  "version": 2
 }

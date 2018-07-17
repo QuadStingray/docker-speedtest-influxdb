@@ -32,6 +32,7 @@ func Parser() Settings {
 	log.Println("******** Parser started with following commands **************")
 	log.Printf("**  interval %v", interval)
 	log.Println("**  server " + server)
+	log.Println("**  host " + host)
 
 	log.Println("**  influxHost " + influxHost)
 	log.Println("**  influxDB " + influxDB)
