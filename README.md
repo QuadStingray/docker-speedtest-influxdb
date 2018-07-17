@@ -63,5 +63,5 @@ docker run -e "HOST=local" speedtest-influxdb:0.5.0
 ## Grafana
 There is an sample grafana dashboard at this repository. You can import that to your Grafana installation. [speedtest.json](docker/grafana/provisioning/dashboards/speedtest.json)
 
-![](docker/grafana/provisioning/dashboards/speedtest_dashboard.png)
+![](https://raw.githubusercontent.com/QuadStingray/docker-speedtest-influxdb/master/images/speedtest_dashboard.png)
 
