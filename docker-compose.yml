@@ -1,0 +1,33 @@
+version: '2'
+
+services:
+  influxdb:
+    restart: always
+    image: influxdb:1.5
+    #volumes:
+      #- "./data/influxdb/:/var/lib/influxdb"
+    environment:
+      - "INFLUXDB_ADMIN_USER=admin"
+      - "INFLUXDB_ADMIN_PASSWORD=password"
+      - "INFLUXDB_DB=speedtest"
+  speedtest-influxdb:
+    restart: always
+    # image: quadstingray/speedtest-influxdb:0.5.0
+    build: .
+    links:
+      - "influxdb:influxdb"
+    environment:
+      - "INTERVAL=120"
+  grafana:
+    restart: always
+    image: grafana/grafana:5.1.0
+    volumes:
+      - "./docker/grafana/provisioning:/etc/grafana/provisioning"
+    ports:
+      - "3000:3000"
+    links:
+      - "influxdb:influxdb"
+    environment:
+      - "GF_SERVER_ROOT_URL=http://localhost"
+      - "GF_SECURITY_ADMIN_PASSWORD=admin"
+      - "GF_AUTH_ANONYMOUS_ENABLED=true"
