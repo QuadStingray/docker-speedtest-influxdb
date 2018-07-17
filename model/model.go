@@ -11,6 +11,7 @@ type Settings struct {
 	Interval         int
 	Host             string
 	Server           string
+	ListServers      bool
 	InfluxDbSettings InfluxDbSettings
 }
 

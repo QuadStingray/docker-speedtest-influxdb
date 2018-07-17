@@ -13,6 +13,7 @@ func Parser() Settings {
 	var influxDB string
 	var influxPwd string
 	var influxUser string
+	var list bool
 
 	flag.IntVar(&interval, "interval", 3600, "seconds between statistics import")
 
@@ -22,6 +23,8 @@ func Parser() Settings {
 	flag.StringVar(&influxDB, "influxDB", "rspamd", "influxdb database")
 	flag.StringVar(&influxUser, "influxUser", "DEFAULT", "influxdb username")
 	flag.StringVar(&influxPwd, "influxPwd", "DEFAULT", "influxdb password")
+
+	flag.BoolVar(&list, "list", false, "list servers")
 
 	flag.Parse()
 
@@ -42,7 +45,5 @@ func Parser() Settings {
 
 	log.Println("**************************************************************")
 	log.Println("**************************************************************")
-	return Settings{interval, host, server, InfluxDbSettings{influxHost, influxUser, influxPwd, influxDB}}
+	return Settings{interval, host, server, list, InfluxDbSettings{influxHost, influxUser, influxPwd, influxDB}}
 }
-
-

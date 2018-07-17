@@ -29,7 +29,8 @@ ENV INTERVAL=3600 \
     INFLUXDB_USER="DEFAULT" \
     INFLUXDB_PWD="DEFAULT" \
     HOST="local" \
-    SPEEDTEST_SERVER=""
+    SPEEDTEST_SERVER="" \
+    SPEEDTEST_LIST_SERVERS="false"
 
 RUN apk add ca-certificates
 COPY --from=build-env /go/src/quadstingray/speedtest-influxdb/speedtestInfluxDB /app/speedtestInfluxDB

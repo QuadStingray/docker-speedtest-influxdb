@@ -54,11 +54,27 @@ docker run -e "HOST=local" speedtest-influxdb:0.5.0
 |:-----------------|:-----------------------|:----------------------------------------------------------------------------------------------|
 | INTERVAL         | 3600                   | Seconds between import of statistics                                                          |
 | HOST             | local                  | host where the speedtest is running for grafana filter                                        |
-| SPEEDTEST_SERVER | ''                     | speedtest.net server. Empty string, means speedtest return server for test                    |
+| [SPEEDTEST_SERVER](#environment-variable-speedtest_server) | ''                     | speedtest.net server. Empty string, means speedtest return server for test                    |
+| SPEEDTEST_LIST_SERVERS | 'false'          | list all available speedtest.net servers at the console                  |
 | INFLUXDB_URL     | http://influxdb:8086   | Url of your InfluxDb installation                                                             |
 | INFLUXDB_DB      | speedtest              | Database at your InfluxDb installation                                                        |
 | INFLUXDB_USER    | DEFAULT                | optional user for insert to your InfluxDb                                                     |
 | INFLUXDB_PWD     | DEFAULT                | optional password for insert to your InfluxDb                                                 |
+
+### Environment Variable: SPEEDTEST_SERVER
+Per default the server is choosen by speedtest.net, but you can set `SPEEDTEST_SERVER` with the id of your favorite server.
+You can get a list of all available servers by set the evironment variable `SPEEDTEST_LIST_SERVERS` to `true`. The list is ordered by country.
+
+```
+...
+2018/07/18 00:16:53 County: Virgin Islands | Location: Saint Croix | ServerId: 4470 | Sponsor: Viya
+2018/07/18 00:16:53 County: Virgin Islands | Location: Saint Croix | ServerId: 6762 | Sponsor: VI Next Generation Network
+2018/07/18 00:16:53 County: Virgin Islands | Location: Road Town | ServerId: 7633 | Sponsor: CCTBVI
+2018/07/18 00:16:53 County: Virgin Islands, British | Location: Road Town | ServerId: 17056 | Sponsor: Flow BVI
+2018/07/18 00:16:53 County: Wales | Location: Pembrokeshire | ServerId: 16607 | Sponsor: Pembs Wifi Ltd
+2018/07/18 00:16:53 County: Wales | Location: Newport | ServerId: 5833 | Sponsor: Hub Network Services Ltd
+...
+```
 
 ## Grafana
 There is an sample grafana dashboard at this repository. You can import that to your Grafana installation. [speedtest.json](docker/grafana/provisioning/dashboards/speedtest.json)
