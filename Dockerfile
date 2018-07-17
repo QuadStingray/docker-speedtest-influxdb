@@ -21,6 +21,8 @@ RUN go build -o speedtestInfluxDB *.go
 FROM alpine
 WORKDIR /app
 
+MAINTAINER QuadStingray <docker-speedtest@quadstingray.com>
+
 ENV INTERVAL=3600 \
     INFLUXDB_DB="speedtest" \
     INFLUXDB_URL="http://influxdb:8086" \
