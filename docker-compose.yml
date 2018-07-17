@@ -12,7 +12,7 @@ services:
       - "INFLUXDB_DB=speedtest"
   speedtest-influxdb:
     restart: always
-    # image: quadstingray/speedtest-influxdb:0.5.0
+    # image: quadstingray/speedtest-influxdb:0.7.0
     build: .
     links:
       - "influxdb:influxdb"

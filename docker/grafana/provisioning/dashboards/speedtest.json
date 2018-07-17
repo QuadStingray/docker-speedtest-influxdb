@@ -782,6 +782,7 @@
         "y": 24
       },
       "id": 14,
+      "links": [],
       "pageSize": null,
       "scroll": true,
       "showHeader": true,
@@ -954,7 +955,7 @@
           ]
         }
       ],
-      "title": "Panel Title",
+      "title": "All Requests",
       "transform": "table",
       "type": "table"
     }
