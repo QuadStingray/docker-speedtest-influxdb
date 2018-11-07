@@ -24,13 +24,15 @@ WORKDIR /app
 MAINTAINER QuadStingray <docker-speedtest@quadstingray.com>
 
 ENV INTERVAL=3600 \
+    INFLUXDB_USE="true" \
     INFLUXDB_DB="speedtest" \
     INFLUXDB_URL="http://influxdb:8086" \
     INFLUXDB_USER="DEFAULT" \
     INFLUXDB_PWD="DEFAULT" \
     HOST="local" \
     SPEEDTEST_SERVER="" \
-    SPEEDTEST_LIST_SERVERS="false"
+    SPEEDTEST_LIST_SERVERS="false" \
+    SHOW_EXTERNAL_IP="false"
 
 RUN apk add ca-certificates
 COPY --from=build-env /go/src/quadstingray/speedtest-influxdb/speedtestInfluxDB /app/speedtestInfluxDB

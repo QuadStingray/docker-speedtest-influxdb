@@ -1,4 +1,4 @@
-# speedtest-influxdb:0.7.0
+# speedtest-influxdb:0.8.0
 
 - [Introduction](#introduction)
   - [Contributing](#contributing)
@@ -32,7 +32,7 @@ Automated builds of the image are available on
 [Dockerhub](https://hub.docker.com/r/quadstingray/docker-speedtest/)
 
 ```bash
-docker pull speedtest-influxdb:0.7.0
+docker pull speedtest-influxdb:0.8.0
 ```
 
 Alternatively you can build the image yourself.
@@ -42,7 +42,7 @@ docker build . --tag 'speedtest-influxdb:dev';
 
 ## Quickstart
 ```bash
-docker run -e "HOST=local" speedtest-influxdb:0.7.0 
+docker run -e "HOST=local" speedtest-influxdb:0.8.0 
 ```
 
 *Alternatively, you can use the sample [docker-compose.yml](docker-compose.yml) file to start the container using [Docker Compose](https://docs.docker.com/compose/)*
@@ -56,6 +56,8 @@ docker run -e "HOST=local" speedtest-influxdb:0.7.0
 | HOST             | local                  | host where the speedtest is running for grafana filter                                        |
 | [SPEEDTEST_SERVER](#environment-variable-speedtest_server) | ''                     | speedtest.net server. Empty string, means speedtest return server for test                    |
 | SPEEDTEST_LIST_SERVERS | 'false'          | list all available speedtest.net servers at the console                  |
+| SHOW_EXTERNAL_IP | 'false'          | You can activate logging your external Ip to InfluxDb to monitor IP changes.                   |
+| INFLUXDB_USE     | 'true'   | You can deactivate save speedtest results to influx                                                             |
 | INFLUXDB_URL     | http://influxdb:8086   | Url of your InfluxDb installation                                                             |
 | INFLUXDB_DB      | speedtest              | Database at your InfluxDb installation                                                        |
 | INFLUXDB_USER    | DEFAULT                | optional user for insert to your InfluxDb                                                     |

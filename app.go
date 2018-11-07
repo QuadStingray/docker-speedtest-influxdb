@@ -1,12 +1,13 @@
 package main
 
 import (
+	"github.com/glendc/go-external-ip"
 	"github.com/kylegrantlucas/speedtest"
-	"quadstingray/speedtest-influxdb/model"
 	"log"
-	"time"
 	"os"
+	"quadstingray/speedtest-influxdb/model"
 	"sort"
+	"time"
 )
 
 func main() {
@@ -20,8 +21,16 @@ func main() {
 	for true {
 		log.Println("speed test started")
 		stats := runTest(settings)
-		model.SaveToInfluxDb(stats, settings)
-		log.Printf("Ping: %3.2f ms | Download: %3.2f Mbps | Upload: %3.2f Mbps", stats.Ping, stats.Down_Mbs, stats.Up_Mbs)
+
+		if settings.InfluxDbSettings.Use_Influx {
+			model.SaveToInfluxDb(stats, settings)
+		}
+
+		if settings.ShowMyIp {
+			log.Printf("Ping: %3.2f ms | Download: %3.2f Mbps | Upload: %3.2f Mbps | External_Ip: %s", stats.Ping, stats.Down_Mbs, stats.Up_Mbs, stats.External_Ip)
+		} else {
+			log.Printf("Ping: %3.2f ms | Download: %3.2f Mbps | Upload: %3.2f Mbps", stats.Ping, stats.Down_Mbs, stats.Up_Mbs)
+		}
 		log.Printf("sleep for %v seconds", settings.Interval)
 		time.Sleep(time.Duration(settings.Interval) * time.Second)
 	}
@@ -69,5 +78,12 @@ func runTest(settings model.Settings) model.SpeedTestStatistics {
 	if err != nil {
 		log.Fatalf("error getting upload: %v", err)
 	}
-	return model.SpeedTestStatistics{server.ID, server.Name + ", " + server.Country, server.Latency, dmbps, umbps, server.Distance}
+
+	consensus := externalip.DefaultConsensus(nil, nil)
+	externalIp, err := consensus.ExternalIP()
+	if err != nil {
+		log.Fatalf("error getting externalIp: %v", err)
+	}
+
+	return model.SpeedTestStatistics{server.ID, server.Name + ", " + server.Country, server.Latency, dmbps, umbps, server.Distance, externalIp.String()}
 }

@@ -3,35 +3,53 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:fdae1c338ec6667687fb3fdbde842b3c421c930163981b5d441502b240b7f50b"
   name = "github.com/dchest/uniuri"
   packages = ["."]
+  pruneopts = "UT"
   revision = "8902c56451e9b58ff940bbe5fec35d5f9c04584a"
 
 [[projects]]
+  branch = "master"
+  digest = "1:211bcf1d62481f6ec9f00cf9474615297f10f5fe7cfd70418b9d69528692c954"
+  name = "github.com/glendc/go-external-ip"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "139229dcdddd5ad18f5c4912fcb905a4079e2a36"
+
+[[projects]]
+  digest = "1:e1c2e45310217ec33bb738a5d94f4698733ff576899b22175697a0f967c170ec"
   name = "github.com/influxdata/influxdb"
   packages = [
     "client/v2",
     "models",
-    "pkg/escape"
+    "pkg/escape",
   ]
+  pruneopts = "UT"
   revision = "62ab18a0f43ee342b84debaaae5486b8b2d8682c"
   version = "v1.6.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:55f089b1e361a4f914da543f651f6ffe2d878d8186d64d261f174ecb32b92cc9"
   name = "github.com/kylegrantlucas/speedtest"
   packages = [
     ".",
     "coords",
     "http",
     "util",
-    "xml"
+    "xml",
   ]
+  pruneopts = "UT"
   revision = "f8512f58e7ead921fded157e7fc4261a694679f5"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ecf5215d40fa68dd51c1454b2fe30afba8cd547601e4023cb097189e37a674fb"
+  input-imports = [
+    "github.com/glendc/go-external-ip",
+    "github.com/influxdata/influxdb/client/v2",
+    "github.com/kylegrantlucas/speedtest",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
