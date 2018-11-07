@@ -29,7 +29,7 @@ If that recommendations do not help then [report your issue](https://github.com/
 # Getting started
 ## Installation
 Automated builds of the image are available on
-[Dockerhub](https://hub.docker.com/r/quadstingray/docker-speedtest/)
+[Dockerhub](https://hub.docker.com/r/quadstingray/speedtest-influxdb/)
 
 ```bash
 docker pull speedtest-influxdb:0.8.0
