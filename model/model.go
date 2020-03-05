@@ -9,12 +9,13 @@ type InfluxDbSettings struct {
 }
 
 type Settings struct {
-	Interval         int
-	Host             string
-	Server           string
-	ListServers      bool
-	ShowMyIp         bool
-	InfluxDbSettings InfluxDbSettings
+	Interval           int
+	Host               string
+	Server             string
+	ListServers        bool
+	KeepProcessRunning bool
+	ShowMyIp           bool
+	InfluxDbSettings   InfluxDbSettings
 }
 
 type SpeedTestStatistics struct {

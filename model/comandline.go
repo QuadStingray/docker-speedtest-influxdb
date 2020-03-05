@@ -14,6 +14,7 @@ func Parser() Settings {
 	var influxPwd string
 	var influxUser string
 	var list bool
+	var keepProcessRunning bool
 	var showExternalIp bool
 	var saveToInfluxDb bool
 
@@ -28,6 +29,7 @@ func Parser() Settings {
 
 	flag.BoolVar(&saveToInfluxDb, "saveToInfluxDb", false, "save to influxdb")
 	flag.BoolVar(&list, "list", false, "list servers")
+	flag.BoolVar(&keepProcessRunning, "keepProcessRunning", false, "keep process running")
 	flag.BoolVar(&showExternalIp, "showExternalIp", true, "save and show external Ip of docker host")
 
 	flag.Parse()
@@ -59,5 +61,5 @@ func Parser() Settings {
 
 	log.Println("**************************************************************")
 	log.Println("**************************************************************")
-	return Settings{interval, host, server, list, showExternalIp, InfluxDbSettings{saveToInfluxDb, influxHost, influxUser, influxPwd, influxDB}}
+	return Settings{interval, host, server, list, keepProcessRunning, showExternalIp, InfluxDbSettings{saveToInfluxDb, influxHost, influxUser, influxPwd, influxDB}}
 }

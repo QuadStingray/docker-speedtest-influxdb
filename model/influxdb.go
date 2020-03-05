@@ -57,6 +57,8 @@ func SaveToInfluxDb(statistics SpeedTestStatistics, settings Settings) {
 
 	err = c.Write(bp)
 	if err != nil {
-		log.Fatalf("could not write to influx Db. check connection to %v and Db %s with user %v with pwd %s", settings.InfluxDbSettings.Db_Url, settings.InfluxDbSettings.Db, settings.InfluxDbSettings.Username, settings.InfluxDbSettings.Password)
+		log.Printf("could not write to influx Db. check connection to %v and Db %s with user %v with pwd %s", settings.InfluxDbSettings.Db_Url, settings.InfluxDbSettings.Db, settings.InfluxDbSettings.Username, settings.InfluxDbSettings.Password)
+		time.Sleep(time.Duration(10) * time.Second)
+		SaveToInfluxDb(statistics, settings)
 	}
 }

@@ -56,6 +56,7 @@ docker run -e "HOST=local" speedtest-influxdb:0.8.0
 | HOST             | local                  | host where the speedtest is running for grafana filter                                        |
 | [SPEEDTEST_SERVER](#environment-variable-speedtest_server) | ''                     | speedtest.net server. Empty string, means speedtest return server for test                    |
 | SPEEDTEST_LIST_SERVERS | 'false'          | list all available speedtest.net servers at the console                  |
+| SPEEDTEST_LIST_KEEP_CONTAINER_RUNNING | 'false'          | keep docker container running after listing all speedtet.net servers                  |
 | SHOW_EXTERNAL_IP | 'false'          | You can activate logging your external Ip to InfluxDb to monitor IP changes.                   |
 | INFLUXDB_USE     | 'true'   | You can deactivate save speedtest results to influx                                                             |
 | INFLUXDB_URL     | http://influxdb:8086   | Url of your InfluxDb installation                                                             |
