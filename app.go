@@ -76,7 +76,7 @@ func speedTestClient(settings model.Settings) (*speedtest.Client, error) {
 		NumLatencyTests: 3,
 		UserAgent:       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.21 Safari/537.36",
 	}
-	timeOut := 15 * time.Minute
+	timeOut := time.Hour
 	return speedtest.NewClient(config, speedtest.DefaultDLSizes, speedtest.DefaultULSizes, timeOut)
 }
 
