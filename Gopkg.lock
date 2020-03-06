@@ -42,6 +42,7 @@
     "github.com/dchest/uniuri",
     "github.com/influxdata/influxdb/client/v2",
     "github.com/kylegrantlucas/speedtest",
+    "github.com/kylegrantlucas/speedtest/coords",
     "github.com/kylegrantlucas/speedtest/http",
   ]
   solver-name = "gps-cdcl"
