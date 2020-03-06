@@ -1,8 +1,10 @@
 package main
 
 import (
-	"github.com/glendc/go-external-ip"
+	"github.com/dchest/uniuri"
 	"github.com/kylegrantlucas/speedtest"
+	"github.com/kylegrantlucas/speedtest/coords"
+	"github.com/kylegrantlucas/speedtest/http"
 	"log"
 	"os"
 	"quadstingray/speedtest-influxdb/model"
@@ -65,8 +67,21 @@ func listServers() {
 	}
 }
 
+func speedTestClient() (*speedtest.Client, error) {
+	config := &http.SpeedtestConfig{
+		ConfigURL:       "http://c.speedtest.net/speedtest-config.php?x=" + uniuri.New(),
+		ServersURL:      "http://c.speedtest.net/speedtest-servers-static.php?x=" + uniuri.New(),
+		AlgoType:        "avg",
+		NumClosest:      3,
+		NumLatencyTests: 3,
+		UserAgent:       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.21 Safari/537.36",
+	}
+	timeOut := 15 * time.Minute
+	return speedtest.NewClient(config, speedtest.DefaultDLSizes, speedtest.DefaultULSizes, timeOut)
+}
+
 func runTest(settings model.Settings) (model.SpeedTestStatistics, error) {
-	client, err := speedtest.NewDefaultClient()
+	client, err := speedTestClient()
 	if err != nil {
 		log.Printf("error creating client: %v", err)
 	}
