@@ -81,7 +81,9 @@ func speedTestClient(settings model.Settings) (*speedtest.Client, error) {
 }
 
 func runTest(settings model.Settings) (model.SpeedTestStatistics, error) {
-	client, err := speedTestClient(settings)
+
+        client, err := speedtest.NewDefaultClient()
+
 	if err != nil {
 		log.Printf("error creating client: %v", err)
 	}
@@ -90,20 +92,27 @@ func runTest(settings model.Settings) (model.SpeedTestStatistics, error) {
 	server, err := client.GetServer(settings.Server)
 	if err != nil {
 		log.Printf("error getting server: %v", err)
-	}
+	} else {
 
-	dmbps, err := client.Download(server)
-	if err != nil {
-		log.Printf("error getting download: %v", err)
-	}
+        	client, err := speedTestClient(settings)
+        	if err != nil {
+        		log.Printf("error creating client: %v", err)
+        	}
 
-	umbps, err := client.Upload(server)
-	if err != nil {
-		log.Printf("error getting upload: %v", err)
-	}
+                dmbps, err := client.Download(server)
+	        if err != nil {
+		      log.Printf("error getting download: %v", err)
+	        }
 
-	clientInformations := model.ClientInformations{client.HTTPClient.Config.IP, client.HTTPClient.Config.Isp, coords.Coordinate{client.HTTPClient.Config.Lat, client.HTTPClient.Config.Lon}}
+	        umbps, err := client.Upload(server)
+	        if err != nil {
+		       log.Printf("error getting upload: %v", err)
+	        }
 
-	result := model.SpeedTestStatistics{clientInformations, server, server.Latency, dmbps, umbps}
-	return result, nil
+        	clientInformations := model.ClientInformations{client.HTTPClient.Config.IP, client.HTTPClient.Config.Isp, coords.Coordinate{client.HTTPClient.Config.Lat, client.HTTPClient.Config.Lon}}
+
+        	result := model.SpeedTestStatistics{clientInformations, server, server.Latency, dmbps, umbps}
+        	return result, nil
+        }
+        return nil, "Error choosing server"
 }
