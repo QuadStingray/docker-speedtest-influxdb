@@ -33,6 +33,7 @@ ENV INTERVAL=3600 \
     SPEEDTEST_SERVER="" \
     SPEEDTEST_LIST_SERVERS="false" \
     SPEEDTEST_LIST_KEEP_CONTAINER_RUNNING="false" \
+    SPEEDTEST_ALGO_TYPE="max" \
     SHOW_EXTERNAL_IP="false"
 
 RUN apk add ca-certificates

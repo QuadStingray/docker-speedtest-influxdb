@@ -67,11 +67,11 @@ func listServers() {
 	}
 }
 
-func speedTestClient() (*speedtest.Client, error) {
+func speedTestClient(settings model.Settings) (*speedtest.Client, error) {
 	config := &http.SpeedtestConfig{
 		ConfigURL:       "http://c.speedtest.net/speedtest-config.php?x=" + uniuri.New(),
 		ServersURL:      "http://c.speedtest.net/speedtest-servers-static.php?x=" + uniuri.New(),
-		AlgoType:        "avg",
+		AlgoType:        settings.AlgoType,
 		NumClosest:      3,
 		NumLatencyTests: 3,
 		UserAgent:       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.21 Safari/537.36",
@@ -81,7 +81,7 @@ func speedTestClient() (*speedtest.Client, error) {
 }
 
 func runTest(settings model.Settings) (model.SpeedTestStatistics, error) {
-	client, err := speedTestClient()
+	client, err := speedTestClient(settings)
 	if err != nil {
 		log.Printf("error creating client: %v", err)
 	}

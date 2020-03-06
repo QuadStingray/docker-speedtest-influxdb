@@ -17,6 +17,7 @@ func Parser() Settings {
 	var keepProcessRunning bool
 	var showExternalIp bool
 	var saveToInfluxDb bool
+	var algoType string
 
 	flag.IntVar(&interval, "interval", 3600, "seconds between statistics import")
 
@@ -26,6 +27,7 @@ func Parser() Settings {
 	flag.StringVar(&influxDB, "influxDB", "rspamd", "influxdb database")
 	flag.StringVar(&influxUser, "influxUser", "DEFAULT", "influxdb Username")
 	flag.StringVar(&influxPwd, "influxPwd", "DEFAULT", "influxdb Password")
+	flag.StringVar(&algoType, "algoType", "max", "save and show external Ip of docker host")
 
 	flag.BoolVar(&saveToInfluxDb, "saveToInfluxDb", false, "save to influxdb")
 	flag.BoolVar(&list, "list", false, "list servers")
@@ -37,6 +39,7 @@ func Parser() Settings {
 	log.Println("**************************************************************")
 	log.Println("******** Parser started with following commands **************")
 	log.Printf("**  interval %v", interval)
+	log.Println("**  SpeedtestAlgoType " + algoType)
 	log.Println("**  server " + server)
 	log.Println("**  host " + host)
 
@@ -61,5 +64,5 @@ func Parser() Settings {
 
 	log.Println("**************************************************************")
 	log.Println("**************************************************************")
-	return Settings{interval, host, server, list, keepProcessRunning, showExternalIp, InfluxDbSettings{saveToInfluxDb, influxHost, influxUser, influxPwd, influxDB}}
+	return Settings{interval, host, server, algoType, list, keepProcessRunning, showExternalIp, InfluxDbSettings{saveToInfluxDb, influxHost, influxUser, influxPwd, influxDB}}
 }

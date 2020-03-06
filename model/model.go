@@ -17,6 +17,7 @@ type Settings struct {
 	Interval           int
 	Host               string
 	Server             string
+	AlgoType           string
 	ListServers        bool
 	KeepProcessRunning bool
 	ShowMyIp           bool

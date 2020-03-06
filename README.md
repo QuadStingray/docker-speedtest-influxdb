@@ -55,6 +55,7 @@ docker run -e "HOST=local" speedtest-influxdb:0.9.0
 | INTERVAL         | 3600                   | Seconds between import of statistics                                                          |
 | HOST             | local                  | host where the speedtest is running for grafana filter                                        |
 | [SPEEDTEST_SERVER](#environment-variable-speedtest_server) | ''                     | speedtest.net server. Empty string, means speedtest return server for test                    |
+| SPEEDTEST_ALGO_TYPE | 'max'          | how to calculate the speedtest up- and downlad values. changing of `SPEEDTEST_ALGO_TYPE` means avg |
 | SPEEDTEST_LIST_SERVERS | 'false'          | list all available speedtest.net servers at the console                  |
 | SPEEDTEST_LIST_KEEP_CONTAINER_RUNNING | 'false'          | keep docker container running after listing all speedtet.net servers                  |
 | SHOW_EXTERNAL_IP | 'false'          | You can activate logging your external Ip to InfluxDb to monitor IP changes.                   |
