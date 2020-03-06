@@ -36,7 +36,7 @@ func main() {
 				go model.SaveToInfluxDb(stats, settings)
 			}
 			if settings.ShowMyIp {
-				log.Printf("Ping: %3.2f ms | Download: %3.2f Mbps | Upload: %3.2f Mbps | External_Ip: %s", stats.Ping, stats.Down_Mbs, stats.Up_Mbs, stats.External_Ip)
+				log.Printf("Ping: %3.2f ms | Download: %3.2f Mbps | Upload: %3.2f Mbps | External_Ip: %s", stats.Ping, stats.Down_Mbs, stats.Up_Mbs, stats.Client.ExternalIp)
 			} else {
 				log.Printf("Ping: %3.2f ms | Download: %3.2f Mbps | Upload: %3.2f Mbps", stats.Ping, stats.Down_Mbs, stats.Up_Mbs)
 			}
@@ -102,11 +102,8 @@ func runTest(settings model.Settings) (model.SpeedTestStatistics, error) {
 		log.Printf("error getting upload: %v", err)
 	}
 
-	consensus := externalip.DefaultConsensus(nil, nil)
-	externalIp, err := consensus.ExternalIP()
-	if err != nil {
-		log.Printf("error getting externalIp: %v", err)
-	}
-	result := model.SpeedTestStatistics{server.ID, server.Name + ", " + server.Country, server.Latency, dmbps, umbps, server.Distance, externalIp.String()}
+	clientInformations := model.ClientInformations{client.HTTPClient.Config.IP, client.HTTPClient.Config.Isp, coords.Coordinate{client.HTTPClient.Config.Lat, client.HTTPClient.Config.Lon}}
+
+	result := model.SpeedTestStatistics{clientInformations, server, server.Latency, dmbps, umbps}
 	return result, nil
 }

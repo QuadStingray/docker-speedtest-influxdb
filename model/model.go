@@ -1,5 +1,10 @@
 package model
 
+import (
+	"github.com/kylegrantlucas/speedtest/coords"
+	"github.com/kylegrantlucas/speedtest/http"
+)
+
 type InfluxDbSettings struct {
 	Use_Influx bool
 	Db_Url     string
@@ -18,12 +23,16 @@ type Settings struct {
 	InfluxDbSettings   InfluxDbSettings
 }
 
+type ClientInformations struct {
+	ExternalIp string
+	Provider   string
+	Coordinate coords.Coordinate
+}
+
 type SpeedTestStatistics struct {
-	ServerId    string
-	Location    string
-	Ping        float64
-	Down_Mbs    float64
-	Up_Mbs      float64
-	Distance    float64
-	External_Ip string
+	Client   ClientInformations
+	Server   http.Server
+	Ping     float64
+	Down_Mbs float64
+	Up_Mbs   float64
 }
