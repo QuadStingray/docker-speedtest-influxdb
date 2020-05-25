@@ -13,7 +13,7 @@ func SaveToInfluxDb(statistics SpeedTestStatistics, settings Settings) {
 		Password: settings.InfluxDbSettings.Password,
 	})
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("error creating http client: %v", err)
 	}
 
 	// Create a new point batch
@@ -22,7 +22,7 @@ func SaveToInfluxDb(statistics SpeedTestStatistics, settings Settings) {
 		Precision: "s",
 	})
 	if err != nil {
-		log.Fatal(err)
+                log.Printf("error new batch point: %v", err)
 	}
 
 	// Create a point and add to batch
