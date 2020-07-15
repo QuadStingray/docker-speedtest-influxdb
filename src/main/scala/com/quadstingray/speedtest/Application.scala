@@ -63,7 +63,7 @@ object Application extends App {
         }
         case "INFLUX" =>
           influxDb.init()
-          val point = resultConverter.convertToPoint(speedTestResult, clientInfos)
+          val point = resultConverter.convertToPoint(speedTestResult, clientInfos, speedtestHost)
           influxDb.saveMeasurementToDb(point)
         case _ =>
           println(
