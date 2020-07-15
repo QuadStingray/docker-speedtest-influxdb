@@ -1,4 +1,4 @@
-# speedtest-influxdb:0.9.2
+# speedtest-influxdb:1.0.0
 
 - [Introduction](#introduction)
   - [Contributing](#contributing)
@@ -11,6 +11,7 @@
 
 # Introduction
 Git-Repository to build [Docker](https://www.docker.com/) Container Image to run speedtest with [speedtest.net](http://www.speedtest.net/) to influxdb. The Implementation is inspired by https://github.com/frdmn/docker-speedtest
+Changed from speedtest.net to [mLab](https://speed.measurementlab.net/#/) Speedtest network. By using this Library you agree the [Measurement Lab Privacy Policy](https://www.measurementlab.net/privacy/).
 
 ## Contributing
 If you find this image helpfull, so you can see here how you can help:
@@ -37,7 +38,7 @@ docker pull speedtest-influxdb:0.9.2
 
 Alternatively you can build the image yourself.
 ```bash
-docker build . --tag 'speedtest-influxdb:dev';
+sbt docker:publishLocal;
 ```
 
 ## Quickstart
@@ -52,14 +53,9 @@ docker run -e "HOST=local" speedtest-influxdb:0.9.2
 
 | Variable         | Default Value          | Informations                                                                                  |
 |:-----------------|:-----------------------|:----------------------------------------------------------------------------------------------|
-| INTERVAL         | 3600                   | Seconds between import of statistics                                                          |
+| INTERVAL         | 30m                   | Seconds between import of statistics                                                          |
 | HOST             | local                  | host where the speedtest is running for grafana filter                                        |
-| [SPEEDTEST_SERVER](#environment-variable-speedtest_server) | ''                     | speedtest.net server. Empty string, means speedtest return server for test                    |
-| SPEEDTEST_ALGO_TYPE | 'max'          | how to calculate the speedtest up- and downlad values. changing of `SPEEDTEST_ALGO_TYPE` means avg |
-| SPEEDTEST_LIST_SERVERS | 'false'          | list all available speedtest.net servers at the console                  |
-| SPEEDTEST_LIST_KEEP_CONTAINER_RUNNING | 'false'          | keep docker container running after listing all speedtet.net servers                  |
-| SHOW_EXTERNAL_IP | 'false'          | You can activate logging your external Ip to InfluxDb to monitor IP changes.                   |
-| INFLUXDB_USE     | 'true'   | You can deactivate save speedtest results to influx                                                             |
+| OUTPUT     | 'INFLUX'   | Possible Outputs are: JSON, INFLUX, HUMAN                                                             |
 | INFLUXDB_URL     | http://influxdb:8086   | Url of your InfluxDb installation                                                             |
 | INFLUXDB_DB      | speedtest              | Database at your InfluxDb installation                                                        |
 | INFLUXDB_USER    | DEFAULT                | optional user for insert to your InfluxDb                                                     |
@@ -69,19 +65,12 @@ docker run -e "HOST=local" speedtest-influxdb:0.9.2
 Per default the server is choosen by speedtest.net, but you can set `SPEEDTEST_SERVER` with the id of your favorite server.
 You can get a list of all available servers by set the evironment variable `SPEEDTEST_LIST_SERVERS` to `true`. The list is ordered by country.
 
-```
-...
-2018/07/18 00:16:53 County: Virgin Islands | Location: Saint Croix | ServerId: 4470 | Sponsor: Viya
-2018/07/18 00:16:53 County: Virgin Islands | Location: Saint Croix | ServerId: 6762 | Sponsor: VI Next Generation Network
-2018/07/18 00:16:53 County: Virgin Islands | Location: Road Town | ServerId: 7633 | Sponsor: CCTBVI
-2018/07/18 00:16:53 County: Virgin Islands, British | Location: Road Town | ServerId: 17056 | Sponsor: Flow BVI
-2018/07/18 00:16:53 County: Wales | Location: Pembrokeshire | ServerId: 16607 | Sponsor: Pembs Wifi Ltd
-2018/07/18 00:16:53 County: Wales | Location: Newport | ServerId: 5833 | Sponsor: Hub Network Services Ltd
-...
-```
-
 ## Grafana
 There is an sample grafana dashboard at this repository. You can import that to your Grafana installation. [speedtest.json](docker/grafana/provisioning/dashboards/speedtest.json)
 
 ![](https://raw.githubusercontent.com/QuadStingray/docker-speedtest-influxdb/master/images/speedtest_dashboard.png)
 
+
+## Todos:
+* Make Container smaller
+* Refactor Grafana

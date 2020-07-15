@@ -10,7 +10,7 @@ case class InfluxDb(host: String, userName: String, password: String, database: 
 
   private var influxDB: InfluxDB = _
 
-  def init(): Unit = {
+  def init(): Unit =
     if (influxDB == null) {
       if (userName.trim != "")
         influxDB = InfluxDBFactory.connect(host, userName, password)
@@ -46,8 +46,6 @@ case class InfluxDb(host: String, userName: String, password: String, database: 
       influxDB.setRetentionPolicy(retentionPolicyName)
     }
 
-  }
-
   def saveMeasurementToDb(point: Point): Unit = {
     influxDB.write(point)
     influxDB.flush()
@@ -59,6 +57,7 @@ case class InfluxDb(host: String, userName: String, password: String, database: 
 object InfluxDb {
 
   val TagHost             = "host"
+  val TagHostServer       = "hostServer"
   val FieldDlBandwidth    = "download"
   val FieldUpBandwidth    = "upload"
   val FieldLatency        = "ping"

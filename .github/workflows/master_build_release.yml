@@ -1,0 +1,30 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK zulu@1.11.0
+        uses: olafurpg/setup-scala@v5
+        with:
+          java-version: zulu@1.11.0-6
+      - name: Release
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          if grep -q "SNAPSHOT" build_version.sbt
+          then
+              echo 'Nothing to do';
+          else
+            git config --global user.email "ci@quadstingray.com"
+            git config --global user.name "QuadStingray CI"
+            docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+            sbt "release with-defaults"
+          fi

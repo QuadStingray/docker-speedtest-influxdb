@@ -23,6 +23,7 @@ object Application extends App {
   var influxUser           = System.getProperty("influx_user")
   var influxPassword       = System.getProperty("influx_password")
   var influxDB             = System.getProperty("influx_db")
+  var speedtestHost             = System.getProperty("host")
 
   private val influxDb = database.InfluxDb(influxUrl, influxUser, influxPassword, influxDB)
 
