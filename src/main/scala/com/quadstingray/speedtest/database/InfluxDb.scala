@@ -1,8 +1,8 @@
 package com.quadstingray.speedtest.database
 
 import com.quadstingray.exception.InfluxException
-import org.influxdb.dto.{ Point, Query }
-import org.influxdb.{ BatchOptions, InfluxDB, InfluxDBFactory }
+import org.influxdb.dto.{Point, Query}
+import org.influxdb.{InfluxDB, InfluxDBFactory}
 
 import scala.concurrent.duration._
 
@@ -23,7 +23,7 @@ case class InfluxDb(host: String, userName: String, password: String, database: 
       }
 
       influxDB.enableGzip()
-      influxDB.enableBatch(BatchOptions.DEFAULTS)
+//      influxDB.enableBatch(2000, 100, TimeUnit.MILLISECONDS)
 
       influxDB.query(new Query("CREATE DATABASE " + database))
       influxDB.setDatabase(database)
@@ -40,7 +40,7 @@ case class InfluxDb(host: String, userName: String, password: String, database: 
         }
       }
 
-      val retentionPolicyCreationString = "CREATE RETENTION POLICY \"" + retentionPolicyName + "\" ON \"" + database + "\" DURATION " + duration + " SHARD DURATION " + shardDuration + " DEFAULT"
+      val retentionPolicyCreationString = "CREATE RETENTION POLICY \"" + retentionPolicyName + "\" ON \"" + database + "\" DURATION " + duration + " REPLICATION 1 SHARD DURATION " + shardDuration + " DEFAULT"
       val createRetentionPolicyResult   = influxDB.query(new Query(retentionPolicyCreationString))
       createRetentionPolicyResult.hasError
       influxDB.setRetentionPolicy(retentionPolicyName)
@@ -48,7 +48,6 @@ case class InfluxDb(host: String, userName: String, password: String, database: 
 
   def saveMeasurementToDb(point: Point): Unit = {
     influxDB.write(point)
-    influxDB.flush()
     ""
   }
 

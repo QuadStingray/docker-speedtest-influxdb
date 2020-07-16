@@ -1,17 +1,20 @@
 package com.quadstingray.speedtest
 
+import java.net.UnknownHostException
 import java.util.Date
 
 import com.github.plokhotnyuk.jsoniter_scala.core._
 import com.github.plokhotnyuk.jsoniter_scala.macros.JsonCodecMaker
 import com.quadstingray.speedtest.converter.ResultConverter
 import com.quadstingray.speedtest.geoip.GeoService
-import com.quadstingray.speedtest.model.{ ClientInfos, GeoIpLocation, Location, TestResult }
-import com.quadstingray.speedtest.ndt7.{ ServerClient, SpeedTest }
+import com.quadstingray.speedtest.model.{ClientInfos, GeoIpLocation, Location, TestResult}
+import com.quadstingray.speedtest.ndt7.{ServerClient, SpeedTest}
+import com.typesafe.scalalogging.LazyLogging
 
+import scala.concurrent.TimeoutException
 import scala.concurrent.duration.Duration
 
-object Application extends App {
+object Application extends App with LazyLogging {
 
   private val geoService: GeoService           = GeoService()
   private val speedTestClient                  = ServerClient()
@@ -23,7 +26,7 @@ object Application extends App {
   var influxUser           = System.getProperty("influx_user")
   var influxPassword       = System.getProperty("influx_password")
   var influxDB             = System.getProperty("influx_db")
-  var speedtestHost             = System.getProperty("host")
+  var speedtestHost        = System.getProperty("host")
 
   private val influxDb = database.InfluxDb(influxUrl, influxUser, influxPassword, influxDB)
 
@@ -80,9 +83,16 @@ object Application extends App {
 
       new Date().toInstant.getEpochSecond + interval.toSeconds
     } catch {
-      case _: Exception => new Date().toInstant.getEpochSecond
+      case e: TimeoutException =>
+        println("RequestTimeOut retry in 1m")
+        new Date().toInstant.getEpochSecond + Duration("1m").toSeconds
+      case e: UnknownHostException =>
+        println("UnknownHost: Check your connection! Retry in 1m")
+        new Date().toInstant.getEpochSecond + Duration("1m").toSeconds
     }
-    while (nextRun < new Date().toInstant.getEpochSecond) {}
+    while (nextRun < new Date().toInstant.getEpochSecond) {
+      ""
+    }
   } while (repeatable)
 
   ""
