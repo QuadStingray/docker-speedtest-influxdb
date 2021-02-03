@@ -3,14 +3,22 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:7219a79e7d775b1813e267812e39f04ed15ece1428b1c3e5b24df78e37ab7795"
-  name = "github.com/dchest/uniuri"
+  digest = "1:a1ca357da2f3338f46f1bea17c3d12bac9844c9ee4f4c946f6e988ceceb0f430"
+  name = "github.com/araddon/dateparse"
   packages = ["."]
   pruneopts = "UT"
-  revision = "7aecb25e1fe5a22533fab90a637a8f74a9cf7340"
+  revision = "8aadafed4dc4aee1363ec2a04c9c954544ee54dc"
 
 [[projects]]
-  digest = "1:9b73396bc7a21f88702fe3d314ca7860843c08f9c787bb47f008075f840df23d"
+  digest = "1:6d29f02f0f01c627c2be40fb7347669a9ff2aa215cb97747294c1d13ffa74bdd"
+  name = "github.com/gorilla/websocket"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "b65e62901fc1c0d968042419e74789f6af455eb9"
+  version = "v1.4.2"
+
+[[projects]]
+  digest = "1:9503164eeca57526c77c3c64872566feaa164be6675616e4442b682e3d0f3360"
   name = "github.com/influxdata/influxdb"
   packages = [
     "client/v2",
@@ -18,32 +26,85 @@
     "pkg/escape",
   ]
   pruneopts = "UT"
-  revision = "f46f63d4e2d9684a2dd716594ab609ccd32f0a5b"
-  version = "v1.7.10"
+  revision = "bc8ec4384eed25436d31045f974bf39f3310fa3c"
+  version = "v1.8.4"
 
 [[projects]]
   branch = "master"
-  digest = "1:55f089b1e361a4f914da543f651f6ffe2d878d8186d64d261f174ecb32b92cc9"
+  digest = "1:2c74dbaaa02fb3ea3caae8488cec68a50e66f5673fa4a50bf89e7e1b85ba71c9"
   name = "github.com/kylegrantlucas/speedtest"
-  packages = [
-    ".",
-    "coords",
-    "http",
-    "util",
-    "xml",
-  ]
+  packages = ["coords"]
   pruneopts = "UT"
   revision = "f8512f58e7ead921fded157e7fc4261a694679f5"
+
+[[projects]]
+  digest = "1:02a42284672777908afc09ce52c70798ad8da06c553205540522e196bb862488"
+  name = "github.com/m-lab/go"
+  packages = [
+    "anonymize",
+    "flagx",
+    "rtx",
+  ]
+  pruneopts = "UT"
+  revision = "5fa2a44869946e033b55656c443575b2c7affbad"
+  version = "v0.1.44"
+
+[[projects]]
+  digest = "1:6cdd662b3a81cb4eae59d01141b63a37ccf4a0da881cab4027e5c16ec5047749"
+  name = "github.com/m-lab/locate"
+  packages = [
+    "api/locate",
+    "api/v2",
+  ]
+  pruneopts = "UT"
+  revision = "8459a0eee3d6872c1a22e25500b194fad1d993f3"
+  version = "v0.7.0"
+
+[[projects]]
+  digest = "1:bdb2da1f4bd4b91971965f7a7124d352196d6e37f27851adac2c83bc96d350d9"
+  name = "github.com/m-lab/ndt-server"
+  packages = [
+    "metadata",
+    "ndt7/model",
+  ]
+  pruneopts = "UT"
+  revision = "91f8780890e5829454af479232931907138ee459"
+  version = "v0.20.5"
+
+[[projects]]
+  digest = "1:7349aa614b949a12137c8f4575f91dd56988c9364f80bbcc4b5ff2d1c5bfd4b3"
+  name = "github.com/m-lab/ndt7-client-go"
+  packages = [
+    ".",
+    "internal/download",
+    "internal/params",
+    "internal/upload",
+    "internal/websocketx",
+    "spec",
+  ]
+  pruneopts = "UT"
+  revision = "10bc591e88fea3c55aa81bbb39812047733a2bb5"
+  version = "v0.4.1"
+
+[[projects]]
+  digest = "1:4958b2b86de6ad6ecf9c1401c49bdc5ab32ba1d6041eb9a21d4be89da63c80c8"
+  name = "github.com/m-lab/tcp-info"
+  packages = [
+    "inetdiag",
+    "tcp",
+  ]
+  pruneopts = "UT"
+  revision = "7481b6e6971fc76ee2b55f3b238d0d444b702f12"
+  version = "v1.5.3"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/dchest/uniuri",
     "github.com/influxdata/influxdb/client/v2",
-    "github.com/kylegrantlucas/speedtest",
     "github.com/kylegrantlucas/speedtest/coords",
-    "github.com/kylegrantlucas/speedtest/http",
+    "github.com/m-lab/ndt7-client-go",
+    "github.com/m-lab/ndt7-client-go/spec",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

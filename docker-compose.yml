@@ -3,7 +3,7 @@ version: '2'
 services:
   influxdb:
     restart: always
-    image: influxdb:1.5
+    image: influxdb:1.7.10
     #volumes:
       #- "./data/influxdb/:/var/lib/influxdb"
     environment:
@@ -18,9 +18,10 @@ services:
       - "influxdb:influxdb"
     environment:
       - "INTERVAL=120"
+#      - "SPEEDTEST_LIST_SERVERS=true"
   grafana:
     restart: always
-    image: grafana/grafana:5.1.0
+    image: grafana/grafana:7.3.7
     volumes:
       - "./docker/grafana/provisioning:/etc/grafana/provisioning"
     ports:
