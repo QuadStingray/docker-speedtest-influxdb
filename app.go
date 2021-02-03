@@ -1,15 +1,23 @@
 package main
 
 import (
-	"github.com/dchest/uniuri"
-	"github.com/kylegrantlucas/speedtest"
+	"context"
 	"github.com/kylegrantlucas/speedtest/coords"
-	"github.com/kylegrantlucas/speedtest/http"
+	"github.com/m-lab/ndt7-client-go"
+	"github.com/m-lab/ndt7-client-go/spec"
 	"log"
+	"net"
 	"os"
 	"quadstingray/speedtest-influxdb/model"
+	"quadstingray/speedtest-influxdb/model/speedtest"
 	"sort"
 	"time"
+)
+
+const (
+	clientName     = "speedtest-influxdb"
+	clientVersion  = "1.0.0"
+	defaultTimeout = 60 * time.Second
 )
 
 func main() {
@@ -26,7 +34,11 @@ func main() {
 	}
 
 	for true {
-		log.Printf("speed test started")
+
+		if settings.IncludeHumanReadable {
+			log.Printf("speed test started")
+		}
+
 		stats, err := runTest(settings)
 
 		if err != nil {
@@ -35,12 +47,9 @@ func main() {
 			if settings.InfluxDbSettings.Use_Influx {
 				go model.SaveToInfluxDb(stats, settings)
 			}
-			if settings.ShowMyIp {
-				log.Printf("Ping: %3.2f ms | Download: %3.2f Mbps | Upload: %3.2f Mbps | External_Ip: %s", stats.Ping, stats.Down_Mbs, stats.Up_Mbs, stats.Client.ExternalIp)
-			} else {
-				log.Printf("Ping: %3.2f ms | Download: %3.2f Mbps | Upload: %3.2f Mbps", stats.Ping, stats.Down_Mbs, stats.Up_Mbs)
+			if settings.IncludeHumanReadable {
+				log.Printf("sleep for %v seconds", settings.Interval)
 			}
-			log.Printf("sleep for %v seconds", settings.Interval)
 			time.Sleep(time.Duration(settings.Interval) * time.Second)
 		}
 
@@ -48,12 +57,8 @@ func main() {
 }
 
 func listServers() {
-	client, err := speedtest.NewDefaultClient()
-	if err != nil {
-		log.Printf("error creating client: %v", err)
-	}
 
-	allServers, err := client.HTTPClient.GetServers()
+	allServers, err := speedtest.ListServer()
 	if err != nil {
 		log.Printf("error creating client: %v", err)
 	}
@@ -63,56 +68,140 @@ func listServers() {
 	})
 
 	for _, v := range allServers {
-		log.Printf("County: %v | Location: %v | ServerId: %v | Sponsor: %v", v.Country, v.Name, v.ID, v.Sponsor)
+		log.Printf("County: %v | Location: %v | ServerId: %v | UplinkSpeed: %v | Roundrobin: %v", v.Country, v.City, v.Site, v.UplinkSpeed, v.Roundrobin)
 	}
-}
-
-func speedTestClient(settings model.Settings) (*speedtest.Client, error) {
-	config := &http.SpeedtestConfig{
-		ConfigURL:       "http://c.speedtest.net/speedtest-config.php?x=" + uniuri.New(),
-		ServersURL:      "http://c.speedtest.net/speedtest-servers-static.php?x=" + uniuri.New(),
-		AlgoType:        settings.AlgoType,
-		NumClosest:      3,
-		NumLatencyTests: 3,
-		UserAgent:       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.21 Safari/537.36",
-	}
-	timeOut := time.Hour
-	return speedtest.NewClient(config, speedtest.DefaultDLSizes, speedtest.DefaultULSizes, timeOut)
 }
 
 func runTest(settings model.Settings) (model.SpeedTestStatistics, error) {
 
-        client, err := speedtest.NewDefaultClient()
+	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
+	defer cancel()
 
-	if err != nil {
-		log.Printf("error creating client: %v", err)
+	var output speedtest.OutputType
+
+	if settings.IncludeHumanReadable {
+		output = speedtest.NewHumanReadable()
+	} else {
+		output = speedtest.SilentOutput{}
 	}
 
-	// Pass an empty string to select the fastest server
-	server, err := client.GetServer(settings.Server)
-	if err != nil {
-		log.Printf("error getting server: %v", err)
+	var r = speedtest.TestRunner{
+		ndt7.NewClient(clientName, clientVersion),
+		output,
+	}
+
+	if settings.Server != "" {
+		r.Client.Server = "ndt-mlab3-" + settings.Server + ".mlab-oti.measurement-lab.org"
+	}
+
+	var code int
+	code += r.RunDownload(ctx)
+	code += r.RunUpload(ctx)
+
+	if code != 0 {
+		code = 0
+		log.Printf("No Connection to Server %v restart with search new NDT7 Sever", r.Client.Server)
+		r.Client.Server = ""
+		code += r.RunDownload(ctx)
+		code += r.RunUpload(ctx)
+		if code != 0 {
+			os.Exit(code)
+		}
+	}
+
+	s := makeSummary(r.Client.FQDN, r.Client.Results())
+	r.Output.OnSummary(s)
+
+	geoClient, _ := model.CheckIpLocation(s.ClientIP)
+	time.Sleep(time.Duration(1) * time.Second)
+	geoSever, _ := speedtest.FindServerByFQDN(s.ServerFQDN)
+
+	var distance float64
+	if geoSever.Lat == 0 && geoSever.Lon == 0 || geoClient.Lat == 0 && geoClient.Lon == 0 {
+		distance = 0
 	} else {
+		distance = model.Distance(geoSever.Lat, geoSever.Lon, geoClient.Lat, geoClient.Lon, settings.DistanceUnit)
+	}
 
-        	client, err := speedTestClient(settings)
-        	if err != nil {
-        		log.Printf("error creating client: %v", err)
-        	}
+	return model.SpeedTestStatistics{
+		model.ClientInformations{
+			ExternalIp: s.ClientIP,
+			Provider:   geoClient.Org,
+			Coordinate: coords.Coordinate{
+				geoClient.Lat,
+				geoClient.Lon,
+			},
+		},
+		model.Server{
+			URL:      s.ServerFQDN,
+			Lat:      geoSever.Lat,
+			Lon:      geoSever.Lon,
+			Name:     s.ServerFQDN,
+			Country:  geoSever.Country,
+			City:     geoSever.City,
+			Distance: distance,
+			Latency:  0,
+		},
+		s.MinRTT.Value,
+		s.Download.Value,
+		s.Upload.Value,
+		s.DownloadRetrans.Value,
+	}, nil
+}
 
-                dmbps, err := client.Download(server)
-	        if err != nil {
-		      log.Printf("error getting download: %v", err)
-	        }
+func makeSummary(FQDN string, results map[spec.TestKind]*ndt7.LatestMeasurements) *speedtest.Summary {
 
-	        umbps, err := client.Upload(server)
-	        if err != nil {
-		       log.Printf("error getting upload: %v", err)
-	        }
+	s := speedtest.NewSummary(FQDN)
 
-        	clientInformations := model.ClientInformations{client.HTTPClient.Config.IP, client.HTTPClient.Config.Isp, coords.Coordinate{client.HTTPClient.Config.Lat, client.HTTPClient.Config.Lon}}
+	if results[spec.TestDownload] != nil &&
+		results[spec.TestDownload].ConnectionInfo != nil {
+		// Get UUID, ClientIP and ServerIP from ConnectionInfo.
+		s.DownloadUUID = results[spec.TestDownload].ConnectionInfo.UUID
 
-        	result := model.SpeedTestStatistics{clientInformations, server, server.Latency, dmbps, umbps}
-        	return result, nil
-        }
-        return nil, "Error choosing server"
+		clientIP, _, err := net.SplitHostPort(results[spec.TestDownload].ConnectionInfo.Client)
+		if err == nil {
+			s.ClientIP = clientIP
+		}
+
+		serverIP, _, err := net.SplitHostPort(results[spec.TestDownload].ConnectionInfo.Server)
+		if err == nil {
+			s.ServerIP = serverIP
+		}
+	}
+
+	if dl, ok := results[spec.TestDownload]; ok {
+		if dl.Client.AppInfo != nil && dl.Client.AppInfo.ElapsedTime > 0 {
+			elapsed := float64(dl.Client.AppInfo.ElapsedTime) / 1e06
+			s.Download = speedtest.ValueUnitPair{
+				Value: (8.0 * float64(dl.Client.AppInfo.NumBytes)) /
+					elapsed / (1000.0 * 1000.0),
+				Unit: "Mbit/s",
+			}
+		}
+		if dl.Server.TCPInfo != nil {
+			if dl.Server.TCPInfo.BytesSent > 0 {
+				s.DownloadRetrans = speedtest.ValueUnitPair{
+					Value: float64(dl.Server.TCPInfo.BytesRetrans) / float64(dl.Server.TCPInfo.BytesSent) * 100,
+					Unit:  "%",
+				}
+			}
+			s.MinRTT = speedtest.ValueUnitPair{
+				Value: float64(dl.Server.TCPInfo.MinRTT) / 1000,
+				Unit:  "ms",
+			}
+		}
+	}
+	// Upload comes from the client-side Measurement during the upload test.
+	if ul, ok := results[spec.TestUpload]; ok {
+		if ul.Client.AppInfo != nil && ul.Client.AppInfo.ElapsedTime > 0 {
+			elapsed := float64(ul.Client.AppInfo.ElapsedTime) / 1e06
+			s.Upload = speedtest.ValueUnitPair{
+				Value: (8.0 * float64(ul.Client.AppInfo.NumBytes)) /
+					elapsed / (1000.0 * 1000.0),
+				Unit: "Mbit/s",
+			}
+		}
+	}
+
+	return s
 }

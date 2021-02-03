@@ -2,7 +2,6 @@ package model
 
 import (
 	"github.com/kylegrantlucas/speedtest/coords"
-	"github.com/kylegrantlucas/speedtest/http"
 )
 
 type InfluxDbSettings struct {
@@ -14,14 +13,15 @@ type InfluxDbSettings struct {
 }
 
 type Settings struct {
-	Interval           int
-	Host               string
-	Server             string
-	AlgoType           string
-	ListServers        bool
-	KeepProcessRunning bool
-	ShowMyIp           bool
-	InfluxDbSettings   InfluxDbSettings
+	Interval             int
+	Host                 string
+	Server               string
+	DistanceUnit         string
+	ListServers          bool
+	KeepProcessRunning   bool
+	ShowMyIp             bool
+	IncludeHumanReadable bool
+	InfluxDbSettings     InfluxDbSettings
 }
 
 type ClientInformations struct {
@@ -31,9 +31,21 @@ type ClientInformations struct {
 }
 
 type SpeedTestStatistics struct {
-	Client   ClientInformations
-	Server   http.Server
-	Ping     float64
-	Down_Mbs float64
-	Up_Mbs   float64
+	Client             ClientInformations
+	Server             Server
+	Ping               float64
+	Down_Mbs           float64
+	Up_Mbs             float64
+	DownRetransPercent float64
+}
+
+type Server struct {
+	URL      string
+	Lat      float64
+	Lon      float64
+	Name     string
+	Country  string
+	City     string
+	Distance float64
+	Latency  float64
 }

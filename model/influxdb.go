@@ -22,7 +22,7 @@ func SaveToInfluxDb(statistics SpeedTestStatistics, settings Settings) {
 		Precision: "s",
 	})
 	if err != nil {
-                log.Printf("error new batch point: %v", err)
+		log.Printf("error new batch point: %v", err)
 	}
 
 	// Create a point and add to batch
@@ -33,9 +33,8 @@ func SaveToInfluxDb(statistics SpeedTestStatistics, settings Settings) {
 		"upload_mbs":     statistics.Up_Mbs,
 		"ping":           statistics.Ping,
 		"distance":       statistics.Server.Distance,
-		"serverid":       statistics.Server.ID,
-		"location":       statistics.Server.Name + ", " + statistics.Server.Country,
-		"sponsor":        statistics.Server.Sponsor,
+		"serverid":       statistics.Server.Name,
+		"location":       statistics.Server.City + ", " + statistics.Server.Country,
 		"clientProvider": statistics.Client.Provider,
 	}
 
@@ -45,10 +44,9 @@ func SaveToInfluxDb(statistics SpeedTestStatistics, settings Settings) {
 			"upload_mbs":     statistics.Up_Mbs,
 			"ping":           statistics.Ping,
 			"distance":       statistics.Server.Distance,
-			"serverid":       statistics.Server.ID,
-			"location":       statistics.Server.Name + ", " + statistics.Server.Country,
+			"serverid":       statistics.Server.Name,
+			"location":       statistics.Server.City + ", " + statistics.Server.Country,
 			"external_ip":    statistics.Client.ExternalIp,
-			"sponsor":        statistics.Server.Sponsor,
 			"clientProvider": statistics.Client.Provider,
 		}
 	}
