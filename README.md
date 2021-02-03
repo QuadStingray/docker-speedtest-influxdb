@@ -102,3 +102,6 @@ There is an sample grafana dashboard at this repository. You can import that to 
 
 ![](https://raw.githubusercontent.com/QuadStingray/docker-speedtest-influxdb/master/images/speedtest_dashboard.png)
 
+
+## Todo:
+* Code Clean Up
