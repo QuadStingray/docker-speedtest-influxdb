@@ -22,6 +22,8 @@ type Settings struct {
 	ShowMyIp             bool
 	IncludeHumanReadable bool
 	InfluxDbSettings     InfluxDbSettings
+	RetryZeroValue       bool
+	RetryInterval        int
 }
 
 type ClientInformations struct {

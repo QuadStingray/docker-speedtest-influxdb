@@ -7,20 +7,25 @@ import (
 
 func Parser() Settings {
 	var interval int
+	var retryInterval int
+
 	var server string
 	var host string
 	var influxHost string
 	var influxDB string
 	var influxPwd string
 	var influxUser string
+
 	var list bool
 	var keepProcessRunning bool
 	var showExternalIp bool
 	var saveToInfluxDb bool
 	var distanceUnit string
 	var includeHumanOutput bool
+	var retryZeroValue bool
 
 	flag.IntVar(&interval, "interval", 3600, "seconds between statistics import")
+	flag.IntVar(&retryInterval, "retryInterval", 3600, "seconds between statistics retry")
 
 	flag.StringVar(&host, "host", "", "host where the speedetest is running")
 	flag.StringVar(&influxHost, "influxHost", "http://influxdb:8086", "host of your influxdb instance")
@@ -33,6 +38,7 @@ func Parser() Settings {
 	flag.BoolVar(&saveToInfluxDb, "saveToInfluxDb", false, "save to influxdb")
 	flag.BoolVar(&keepProcessRunning, "keepProcessRunning", false, "keep process running")
 	flag.BoolVar(&showExternalIp, "showExternalIp", true, "save and show external Ip of docker host")
+	flag.BoolVar(&retryZeroValue, "retryZeroValue", false, "retry speedtest at zero values returned")
 
 	flag.StringVar(&server, "server", "", "ndt7 server")
 	flag.BoolVar(&list, "list", false, "list servers")
@@ -66,5 +72,5 @@ func Parser() Settings {
 
 	log.Println("**************************************************************")
 	log.Println("**************************************************************")
-	return Settings{interval, host, server, distanceUnit, list, keepProcessRunning, showExternalIp, includeHumanOutput, InfluxDbSettings{saveToInfluxDb, influxHost, influxUser, influxPwd, influxDB}}
+	return Settings{interval, host, server, distanceUnit, list, keepProcessRunning, showExternalIp, includeHumanOutput, InfluxDbSettings{saveToInfluxDb, influxHost, influxUser, influxPwd, influxDB}, retryZeroValue, retryInterval}
 }

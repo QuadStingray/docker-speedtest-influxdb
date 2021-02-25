@@ -42,15 +42,19 @@ func main() {
 		stats, err := runTest(settings)
 
 		if err != nil {
-			time.Sleep(time.Duration(5) * time.Minute)
+			time.Sleep(time.Duration(settings.RetryInterval) * time.Second)
 		} else {
-			if settings.InfluxDbSettings.Use_Influx {
-				go model.SaveToInfluxDb(stats, settings)
+			if !settings.RetryZeroValue || (stats.Down_Mbs != 0 || stats.Up_Mbs != 0) {
+				if settings.InfluxDbSettings.Use_Influx {
+					go model.SaveToInfluxDb(stats, settings)
+				}
+				if settings.IncludeHumanReadable {
+					log.Printf("sleep for %v seconds", settings.Interval)
+				}
+				time.Sleep(time.Duration(settings.Interval) * time.Second)
+			} else {
+				time.Sleep(time.Duration(settings.RetryInterval) * time.Second)
 			}
-			if settings.IncludeHumanReadable {
-				log.Printf("sleep for %v seconds", settings.Interval)
-			}
-			time.Sleep(time.Duration(settings.Interval) * time.Second)
 		}
 
 	}

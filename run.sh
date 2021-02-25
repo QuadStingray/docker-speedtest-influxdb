@@ -12,4 +12,6 @@
                     -keepProcessRunning="$SPEEDTEST_LIST_KEEP_CONTAINER_RUNNING"  \
                     -distanceUnit="$SPEEDTEST_DISTANCE_UNIT"  \
                     -includeHumanOutput="$INCLUDE_READABLE_OUTPUT"  \
-                    -showExternalIp="$SHOW_EXTERNAL_IP"
+                    -showExternalIp="$SHOW_EXTERNAL_IP" \
+                    -retryInterval="$RETRY_INTERVAL"  \
+                    -retryZeroValue="$RETRY_ZERO_VALUE"

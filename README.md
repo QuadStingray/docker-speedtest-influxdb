@@ -61,9 +61,11 @@ docker run -e "HOST=local" speedtest-influxdb:1.0.0
 | Variable         | Default Value          | Informations                                                                                  |
 |:-----------------|:-----------------------|:----------------------------------------------------------------------------------------------|
 | INTERVAL         | 3600                   | Seconds between import of statistics                                                          |
+| RETRY_INTERVAL   | 300                    | Seconds between retry of statistics import                                                    |
 | HOST             | local                  | host where the speedtest is running for grafana filter                                        |
 | [SPEEDTEST_SERVER](#environment-variable-speedtest_server) | ''                     | ndt 7 server. Empty string, means speedtest return server for test                    |
 | INCLUDE_READABLE_OUTPUT | false           | Log Speedtest Output to Console |
+| RETRY_ZERO_VALUE | false           | Retry Speedtest at Zero Values returned |
 | SPEEDTEST_DISTANCE_UNIT | K               | Unit for Distance Calculation K = Kilometers, N = Nautical Miles other Values = Miles |
 | SPEEDTEST_LIST_SERVERS | 'false'          | list all available ndt7 servers at the console                  |
 | SPEEDTEST_LIST_KEEP_CONTAINER_RUNNING | 'true'          | keep docker container running after listing all ndt7 servers                  |
