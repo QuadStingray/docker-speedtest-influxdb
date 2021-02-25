@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"github.com/kylegrantlucas/speedtest/coords"
 	"github.com/m-lab/ndt7-client-go"
 	"github.com/m-lab/ndt7-client-go/spec"
 	"log"
@@ -141,7 +140,7 @@ func runTest(settings model.Settings) (model.SpeedTestStatistics, error) {
 		model.ClientInformations{
 			ExternalIp: s.ClientIP,
 			Provider:   geoClient.Org,
-			Coordinate: coords.Coordinate{
+			Coordinate: model.Coordinate{
 				geoClient.Lat,
 				geoClient.Lon,
 			},

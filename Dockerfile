@@ -10,9 +10,9 @@ apk add --no-cache bash git openssh
 ADD . /go/src/quadstingray/speedtest-influxdb
 WORKDIR /go/src/quadstingray/speedtest-influxdb
 
-# Go dep!
-RUN go get -u github.com/golang/dep/...
-RUN dep ensure
+RUN export GO111MODULE=on
+RUN go mod init
+RUN go mod tidy
 
 # Build my app
 RUN go build -o speedtestInfluxDB *.go
