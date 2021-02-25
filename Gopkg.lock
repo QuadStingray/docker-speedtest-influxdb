@@ -3,11 +3,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:a1ca357da2f3338f46f1bea17c3d12bac9844c9ee4f4c946f6e988ceceb0f430"
+  digest = "1:372a31c63f7125f683fdc46435ab6f36794d41eff7f08ac8cc3f6ec1d32e2c39"
   name = "github.com/araddon/dateparse"
   packages = ["."]
   pruneopts = "UT"
-  revision = "8aadafed4dc4aee1363ec2a04c9c954544ee54dc"
+  revision = "0eec95c9db7e40737864608615f5aff4cac78680"
 
 [[projects]]
   digest = "1:6d29f02f0f01c627c2be40fb7347669a9ff2aa215cb97747294c1d13ffa74bdd"
