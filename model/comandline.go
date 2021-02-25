@@ -25,7 +25,7 @@ func Parser() Settings {
 	var retryZeroValue bool
 
 	flag.IntVar(&interval, "interval", 3600, "seconds between statistics import")
-	flag.IntVar(&retryInterval, "retryInterval", 3600, "seconds between statistics retry")
+	flag.IntVar(&retryInterval, "retryInterval", 300, "seconds between statistics retry")
 
 	flag.StringVar(&host, "host", "", "host where the speedetest is running")
 	flag.StringVar(&influxHost, "influxHost", "http://influxdb:8086", "host of your influxdb instance")

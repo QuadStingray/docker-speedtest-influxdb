@@ -42,21 +42,20 @@ func CheckIpLocation(ip string) (GeoIP, error) {
 	response, err = http.Get("https://ipapi.co/" + ip + "/json/")
 	if err != nil {
 		fmt.Println(err)
+	} else {
+		defer response.Body.Close()
+		body, err = ioutil.ReadAll(response.Body)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			err = json.Unmarshal(body, &geo)
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
 	}
 
-	defer response.Body.Close()
-
-	body, err = ioutil.ReadAll(response.Body)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	err = json.Unmarshal(body, &geo)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	return geo, nil
+	return geo, err
 }
 
 func LocateUser() (GeoIP, error) {
@@ -71,18 +70,17 @@ func LocateUser() (GeoIP, error) {
 	response, err = http.Get("https://ipapi.co/json/")
 	if err != nil {
 		fmt.Println(err)
-	}
-
-	defer response.Body.Close()
-
-	body, err = ioutil.ReadAll(response.Body)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	err = json.Unmarshal(body, &geo)
-	if err != nil {
-		fmt.Println(err)
+	} else {
+		defer response.Body.Close()
+		body, err = ioutil.ReadAll(response.Body)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			err = json.Unmarshal(body, &geo)
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
 	}
 
 	// Everything accessible in struct now
@@ -95,7 +93,7 @@ func LocateUser() (GeoIP, error) {
 	fmt.Println("Longitude:\t", geo.Lon)
 	fmt.Println("Metro Code:\t", geo.City)
 
-	return geo, nil
+	return geo, err
 }
 
 //func DistanceBetweenUserAndIp(ip string, unit string) (float64, error) {

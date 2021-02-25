@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"github.com/kylegrantlucas/speedtest/coords"
 	"github.com/m-lab/ndt7-client-go"
 	"github.com/m-lab/ndt7-client-go/spec"
@@ -77,6 +78,8 @@ func listServers() {
 }
 
 func runTest(settings model.Settings) (model.SpeedTestStatistics, error) {
+	//geoClient2, _ := model.LocateUser()
+	//log.Printf("%v", geoClient2)
 
 	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
 	defer cancel()
@@ -109,7 +112,14 @@ func runTest(settings model.Settings) (model.SpeedTestStatistics, error) {
 		code += r.RunDownload(ctx)
 		code += r.RunUpload(ctx)
 		if code != 0 {
-			os.Exit(code)
+			return model.SpeedTestStatistics{
+				Client:             model.ClientInformations{},
+				Server:             model.Server{},
+				Ping:               0,
+				Down_Mbs:           0,
+				Up_Mbs:             0,
+				DownRetransPercent: 0,
+			}, errors.New("server not reachable")
 		}
 	}
 
