@@ -17,7 +17,7 @@ import (
 
 const (
 	clientName     = "speedtest-influxdb"
-	clientVersion  = "1.0.0"
+	clientVersion  = "1.1.0"
 	defaultTimeout = 60 * time.Second
 )
 
