@@ -39,19 +39,20 @@ Automated builds of the image are available on
 [Dockerhub](https://hub.docker.com/r/quadstingray/speedtest-influxdb/)
 
 ```bash
-docker pull speedtest-influxdb:1.1.0
+docker pull quadstingray/speedtest-influxdb
+
 ```
 
 Alternatively you can build the image yourself.
 
 ```bash
-docker build . --tag 'speedtest-influxdb:dev';
+docker build . --tag 'quadstingray/speedtest-influxdb:dev';
 ```
 
 ## Quickstart
 
 ```bash
-docker run -e "HOST=local" speedtest-influxdb:1.1.0
+docker run -e "HOST=local" quadstingray/speedtest-influxdb:1.1.0
 ```
 
 *Alternatively, you can use the sample [docker-compose.yml](docker-compose.yml) file to start the container using [Docker Compose](https://docs.docker.com/compose/)*
